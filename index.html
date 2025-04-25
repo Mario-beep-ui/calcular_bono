@@ -1,131 +1,153 @@
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Bono por Turno</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Bono - FG</title>
   <style>
-    :root {
-      --color-bg: #f7f7f7;
-      --color-card: #ffffff;
-      --color-primary: #2c3e50;
-      --color-accent: #2980b9;
-      --color-text: #34495e;
-      --spacing: 1rem;
-      --radius: 8px;
-      --font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f4f4f4;
+      color: #333;
       display: flex;
-      align-items: center;
       justify-content: center;
-      background: var(--color-bg);
-      color: var(--color-text);
-      font-family: var(--font-family);
+      align-items: center;
       min-height: 100vh;
-      padding: var(--spacing);
+      padding: 20px;
     }
-    .calculator {
-      background: var(--color-card);
-      padding: calc(var(--spacing) * 2);
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      max-width: 500px;
       width: 100%;
-      max-width: 400px;
     }
     h1 {
-      font-size: 1.5rem;
-      margin-bottom: var(--spacing);
-      color: var(--color-primary);
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
       text-align: center;
     }
-    .field {
-      margin-bottom: var(--spacing);
-    }
-    .field label {
+    label {
       display: block;
-      font-size: 0.9rem;
-      margin-bottom: 0.25rem;
+      margin-top: 1rem;
+      font-weight: 600;
     }
-    .field input {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #dcdcdc;
-      border-radius: var(--radius);
-      font-size: 1rem;
-      transition: border-color 0.2s;
-    }
-    .field input:focus {
-      outline: none;
-      border-color: var(--color-accent);
-      box-shadow: 0 0 0 2px rgba(41,128,185,0.2);
-    }
-    button {
+    select, button {
       width: 100%;
       padding: 0.75rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
       font-size: 1rem;
-      background: var(--color-accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
+    }
+    button {
+      background: #0f62fe;
+      color: white;
+      font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.3s ease;
+      margin-top: 1rem;
     }
     button:hover {
-      background: #1f618d;
+      background: #0046c0;
     }
-    #resultado {
-      margin-top: calc(var(--spacing) * 1.5);
-      font-size: 1.2rem;
+    .resultado {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #e8f0fe;
+      border-left: 4px solid #0f62fe;
+      border-radius: 8px;
+      font-size: 1.1rem;
       text-align: center;
-      color: var(--color-primary);
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 1.5rem;
+      }
+      h1 {
+        font-size: 1.3rem;
+      }
+      .resultado {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="calculator">
-    <h1>Bono por Turno</h1><div class="field">
-  <label for="diasMatutino">Días en turno matutino</label>
-  <input type="number" id="diasMatutino" min="0" max="7" value="0">
-</div>
+  <div class="container">
+    <h1>Calculadora de Bono Semanal</h1>
+    <label for="semanaAnterior">Turno semana pasada</label>
+    <select id="semanaAnterior">
+      <option value="">Selecciona</option>
+      <option value="matutino">Matutino</option>
+      <option value="vespertino">Vespertino</option>
+    </select>
 
-<div class="field">
-  <label for="diasVespertino">Días en turno vespertino</label>
-  <input type="number" id="diasVespertino" min="0" max="7" value="0">
-</div>
+    <label for="semanaActual">Turno semana actual</label>
+    <select id="semanaActual">
+      <option value="">Selecciona</option>
+      <option value="matutino">Matutino</option>
+      <option value="vespertino">Vespertino</option>
+    </select>
 
-<div class="field">
-  <label for="bonoMatutino">Bono semanal matutino ($)</label>
-  <input type="number" id="bonoMatutino" step="0.01" value="175">
-</div>
+    <button onclick="calcularBono()">Calcular bono</button>
+    <button id="descargarPDF" style="display:none;" onclick="descargarPDF()">Descargar PDF</button>
 
-<div class="field">
-  <label for="bonoVespertino">Bono semanal vespertino ($)</label>
-  <input type="number" id="bonoVespertino" step="0.01" value="233">
-</div>
+    <div id="resultado" class="resultado" style="display:none;"></div>
+  </div>
 
-<button onclick="calcularBono()">Calcular</button>
+  <!-- Librería PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<div id="resultado"></div>
+  <script>
+    let bonoTexto = "";
 
-  </div>  <script>
     function calcularBono() {
-      const diasM = parseFloat(document.getElementById('diasMatutino').value) || 0;
-      const diasV = parseFloat(document.getElementById('diasVespertino').value) || 0;
-      const bonoSemM = parseFloat(document.getElementById('bonoMatutino').value) || 0;
-      const bonoSemV = parseFloat(document.getElementById('bonoVespertino').value) || 0;
+      const semanaAnterior = document.getElementById("semanaAnterior").value;
+      const semanaActual = document.getElementById("semanaActual").value;
+      const resultado = document.getElementById("resultado");
+      const btnPDF = document.getElementById("descargarPDF");
 
-      const bonoDiaM = bonoSemM / 7;
-      const bonoDiaV = bonoSemV / 7;
+      if (!semanaAnterior || !semanaActual) {
+        resultado.style.display = "block";
+        resultado.innerText = "Por favor selecciona ambos turnos.";
+        btnPDF.style.display = "none";
+        return;
+      }
 
-      const total = (diasM * bonoDiaM) + (diasV * bonoDiaV);
+      const bonoMatutinoDia = 175 / 7;
+      const bonoVespertinoDia = 233 / 7;
 
-      document.getElementById('resultado').textContent = 
-        `Tu bono estimado para el periodo es: $${total.toFixed(2)}`;
+      const diasMatutino =
+        (semanaAnterior === "matutino" ? 3 : 0) + (semanaActual === "matutino" ? 4 : 0);
+      const diasVespertino =
+        (semanaAnterior === "vespertino" ? 3 : 0) + (semanaActual === "vespertino" ? 4 : 0);
+
+      const bonoFinal = (diasMatutino * bonoMatutinoDia) + (diasVespertino * bonoVespertinoDia);
+
+      // Calcular el viernes siguiente desde hoy
+      const hoy = new Date();
+      const diaActual = hoy.getDay(); // 0=domingo ... 5=viernes
+      const diasParaViernes = (5 - diaActual + 7) % 7 || 7;
+      const proximoViernes = new Date(hoy);
+      proximoViernes.setDate(hoy.getDate() + diasParaViernes);
+      const opciones = { day: "numeric", month: "long", year: "numeric" };
+      const fechaViernes = proximoViernes.toLocaleDateString("es-MX", opciones);
+
+      bonoTexto = `Tu bono estimado es de $${bonoFinal.toFixed(2)} MXN para el viernes ${fechaViernes}.`;
+
+      resultado.style.display = "block";
+      resultado.innerText = bonoTexto;
+      btnPDF.style.display = "block";
     }
-  </script></body>
+
+    function descargarPDF() {
+      const elemento = document.createElement("div");
+      elemento.innerHTML = `<h2 style="font-family:Arial;">Resumen de Bono Semanal</h2><p style="font-size:16px;">${bonoTexto}</p>`;
+      html2pdf().from(elemento).save("bono_semanal.pdf");
+    }
+  </script>
+</body>
 </html>
