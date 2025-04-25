@@ -1,0 +1,131 @@
+<!DOCTYPE html><html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Bono por Turno</title>
+  <style>
+    :root {
+      --color-bg: #f7f7f7;
+      --color-card: #ffffff;
+      --color-primary: #2c3e50;
+      --color-accent: #2980b9;
+      --color-text: #34495e;
+      --spacing: 1rem;
+      --radius: 8px;
+      --font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-family);
+      min-height: 100vh;
+      padding: var(--spacing);
+    }
+    .calculator {
+      background: var(--color-card);
+      padding: calc(var(--spacing) * 2);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: var(--spacing);
+      color: var(--color-primary);
+      text-align: center;
+    }
+    .field {
+      margin-bottom: var(--spacing);
+    }
+    .field label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+    .field input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #dcdcdc;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    .field input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 2px rgba(41,128,185,0.2);
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #1f618d;
+    }
+    #resultado {
+      margin-top: calc(var(--spacing) * 1.5);
+      font-size: 1.2rem;
+      text-align: center;
+      color: var(--color-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h1>Bono por Turno</h1><div class="field">
+  <label for="diasMatutino">Días en turno matutino</label>
+  <input type="number" id="diasMatutino" min="0" max="7" value="0">
+</div>
+
+<div class="field">
+  <label for="diasVespertino">Días en turno vespertino</label>
+  <input type="number" id="diasVespertino" min="0" max="7" value="0">
+</div>
+
+<div class="field">
+  <label for="bonoMatutino">Bono semanal matutino ($)</label>
+  <input type="number" id="bonoMatutino" step="0.01" value="175">
+</div>
+
+<div class="field">
+  <label for="bonoVespertino">Bono semanal vespertino ($)</label>
+  <input type="number" id="bonoVespertino" step="0.01" value="233">
+</div>
+
+<button onclick="calcularBono()">Calcular</button>
+
+<div id="resultado"></div>
+
+  </div>  <script>
+    function calcularBono() {
+      const diasM = parseFloat(document.getElementById('diasMatutino').value) || 0;
+      const diasV = parseFloat(document.getElementById('diasVespertino').value) || 0;
+      const bonoSemM = parseFloat(document.getElementById('bonoMatutino').value) || 0;
+      const bonoSemV = parseFloat(document.getElementById('bonoVespertino').value) || 0;
+
+      const bonoDiaM = bonoSemM / 7;
+      const bonoDiaV = bonoSemV / 7;
+
+      const total = (diasM * bonoDiaM) + (diasV * bonoDiaV);
+
+      document.getElementById('resultado').textContent = 
+        `Tu bono estimado para el periodo es: $${total.toFixed(2)}`;
+    }
+  </script></body>
+</html>
